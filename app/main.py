@@ -16,14 +16,14 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-# Metrics
+
 REQUEST_COUNT = Counter("request_count", "Total number of requests")
 REQUEST_LATENCY = Summary("request_latency_seconds", "Latency of HTTP requests in seconds")
 
 app.add_middleware(PrometheusMiddleware)
 app.add_route("/metrics", handle_metrics)
 
-# Dependency
+
 def get_db() -> Generator[Session, None, None]:
     db = SessionLocal()
     try:
@@ -42,7 +42,7 @@ def startup_event():
     start_http_server(8001)
 
 @app.post("/weather/", response_model=dict, status_code=status.HTTP_200_OK)
-async def get_weather(city: str, db: Session = Depends(get_db)): # async def
+async def get_weather(city: str, db: Session = Depends(get_db)):
     REQUEST_COUNT.inc()
     with REQUEST_LATENCY.time():
         weather_data = db.query(Weather).filter(Weather.city == city).first()
@@ -52,8 +52,8 @@ async def get_weather(city: str, db: Session = Depends(get_db)): # async def
 
         params = {"q": city, "appid": OPENWEATHER_API_KEY, "units": "metric"}
         try:
-            response = await requests.get(BASE_URL, params=params) # await
-            response.raise_for_status() # Генерирует исключение для плохого статуса
+            response = await requests.get(BASE_URL, params=params) 
+            response.raise_for_status() 
         except requests.exceptions.RequestException as e:
             logger.error(f"Error fetching weather data for {city}: {e}")
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Error fetching weather data: {e}")
