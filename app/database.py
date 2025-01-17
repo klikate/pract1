@@ -15,4 +15,4 @@ try:
     Base = declarative_base()
 except Exception as e:
     logger.critical(f"Failed to initialize database: {e}")
-    raise # Re-raise the exception after logging
+    raise 
