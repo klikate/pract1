@@ -1,0 +1,17 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - docker-compose -f docker-compose.yml build || { echo 'Build failed'; exit 1; }
+  tags:
+    - docker
+
+deploy:
+  stage: deploy
+  script:
+    - docker-compose -f docker-compose.yml up -d || { echo 'Deploy failed'; exit 1; }
+  tags:
+    - docker

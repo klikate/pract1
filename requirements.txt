@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+sqlalchemy
+pydantic
+requests
+psycopg2-binary
+prometheus-client
+starlette-exporter
+httpx[http2]
+python-dotenv 
